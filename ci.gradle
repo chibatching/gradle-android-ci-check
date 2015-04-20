@@ -8,9 +8,14 @@ apply plugin: 'pmd'
 check.dependsOn 'checkstyle', 'findbugs', 'pmd'
 
 task checkstyle(type: Checkstyle) {
-    def conf = File.createTempFile("checkstyle", "")
-    new URL('https://raw.githubusercontent.com/chibatching/gradle-android-ci-check/master/config/checkstyle/checkstyle.xml')
-            .withInputStream{ i -> conf.withOutputStream{ it << i }}
+    def conf
+    if (project.hasProperty('checkStyleConfigFile')) {
+        conf = file(checkStyleConfigFile)
+    } else {
+        conf = File.createTempFile("checkstyle", "")
+        new URL('https://raw.githubusercontent.com/chibatching/gradle-android-ci-check/master/config/checkstyle/checkstyle.xml')
+                .withInputStream{ i -> conf.withOutputStream{ it << i }}
+    }
     configFile conf
     source 'src'
     include '**/*.java'
@@ -25,9 +30,14 @@ task findbugs(type: FindBugs, dependsOn: assembleDebug) {
     effort = "max"
     reportLevel = "high"
 
-    def conf = File.createTempFile("findbugs", "")
-    new URL('https://raw.githubusercontent.com/chibatching/gradle-android-ci-check/master/config/findbugs/findbugs-filter.xml')
-            .withInputStream{ i -> conf.withOutputStream{ it << i }}
+    def conf
+    if (project.hasProperty('findBugsExcludeFilter')) {
+        conf = file(findBugsExcludeFilter)
+    } else {
+        conf = File.createTempFile("findbugs", "")
+        new URL('https://raw.githubusercontent.com/chibatching/gradle-android-ci-check/master/config/findbugs/findbugs-filter.xml')
+                .withInputStream{ i -> conf.withOutputStream{ it << i }}
+    }
     excludeFilter = conf
     classes = files("$project.buildDir/intermediates/classes/")
 
@@ -46,9 +56,14 @@ task findbugs(type: FindBugs, dependsOn: assembleDebug) {
 }
 
 task pmd(type: Pmd) {
-    def conf = File.createTempFile("pmd", "")
-    new URL('https://raw.githubusercontent.com/chibatching/gradle-android-ci-check/master/config/pmd/pmd-ruleset.xml')
-            .withInputStream{ i -> conf.withOutputStream{ it << i }}
+    def conf
+    if (project.hasProperty('pmdRuleSetFiles')) {
+        conf = file(pmdRuleSetFiles)
+    } else {
+        conf = File.createTempFile("pmd", "")
+        new URL('https://raw.githubusercontent.com/chibatching/gradle-android-ci-check/master/config/pmd/pmd-ruleset.xml')
+                .withInputStream{ i -> conf.withOutputStream{ it << i }}
+    }
     ruleSetFiles = files(conf)
     ignoreFailures = true
     ruleSets = [ "java-basic", "java-strings", "java-braces" ]
