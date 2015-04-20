@@ -8,7 +8,7 @@ apply plugin: 'pmd'
 check.dependsOn 'checkstyle', 'findbugs', 'pmd'
 
 task checkstyle(type: Checkstyle) {
-    configFile file("${project.rootDir}/config/quality/checkstyle/checkstyle.xml")
+    configFile file("https://raw.githubusercontent.com/chibatching/ci_test/master/config/checkstyle/checkstyle.xml")
     source 'src'
     include '**/*.java'
     exclude '**/gen/**'
@@ -21,7 +21,7 @@ task findbugs(type: FindBugs, dependsOn: assembleDebug) {
     ignoreFailures = true
     effort = "max"
     reportLevel = "high"
-    excludeFilter = new File("${project.rootDir}/config/quality/findbugs/findbugs-filter.xml")
+    excludeFilter = new File("https://raw.githubusercontent.com/chibatching/ci_test/master/config/findbugs/findbugs-filter.xml")
     classes = files("$project.buildDir/intermediates/classes/")
 
     source 'src'
@@ -39,7 +39,7 @@ task findbugs(type: FindBugs, dependsOn: assembleDebug) {
 }
 
 task pmd(type: Pmd) {
-    ruleSetFiles = files("${project.rootDir}/config/quality/pmd/pmd-ruleset.xml")
+    ruleSetFiles = files("https://raw.githubusercontent.com/chibatching/ci_test/master/config/pmd/pmd-ruleset.xml")
     ignoreFailures = true
     ruleSets = [ "java-basic", "java-strings", "java-braces" ]
 
