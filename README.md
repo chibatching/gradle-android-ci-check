@@ -10,7 +10,7 @@ apply from: "https://raw.githubusercontent.com/chibatching/gradle-android-ci-che
 
 ## Use your own configs
 
-Write local config file on gradle.properties
+If you want to use your own configs, write local config file path on gradle.properties
 
 ```
 checkStyleConfigFile=../config/quality/checkstyle/checkstyle.xml
