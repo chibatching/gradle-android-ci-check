@@ -8,7 +8,10 @@ apply plugin: 'pmd'
 check.dependsOn 'checkstyle', 'findbugs', 'pmd'
 
 task checkstyle(type: Checkstyle) {
-    configFile file("https://raw.githubusercontent.com/chibatching/ci_test/master/config/checkstyle/checkstyle.xml")
+    def conf = File.createTempFile("checkstyle", "")
+    new URL('https://raw.githubusercontent.com/chibatching/ci_test/master/config/checkstyle/checkstyle.xml')
+            .withInputStream{ i -> conf.withOutputStream{ it << i }}
+    configFile conf
     source 'src'
     include '**/*.java'
     exclude '**/gen/**'
@@ -21,7 +24,11 @@ task findbugs(type: FindBugs, dependsOn: assembleDebug) {
     ignoreFailures = true
     effort = "max"
     reportLevel = "high"
-    excludeFilter = new File("https://raw.githubusercontent.com/chibatching/ci_test/master/config/findbugs/findbugs-filter.xml")
+
+    def conf = File.createTempFile("findbugs", "")
+    new URL('https://raw.githubusercontent.com/chibatching/ci_test/master/config/findbugs/findbugs-filter.xml')
+            .withInputStream{ i -> conf.withOutputStream{ it << i }}
+    excludeFilter = conf
     classes = files("$project.buildDir/intermediates/classes/")
 
     source 'src'
@@ -39,7 +46,10 @@ task findbugs(type: FindBugs, dependsOn: assembleDebug) {
 }
 
 task pmd(type: Pmd) {
-    ruleSetFiles = files("https://raw.githubusercontent.com/chibatching/ci_test/master/config/pmd/pmd-ruleset.xml")
+    def conf = File.createTempFile("pmd", "")
+    new URL('https://raw.githubusercontent.com/chibatching/ci_test/master/config/pmd/pmd-ruleset.xml')
+            .withInputStream{ i -> conf.withOutputStream{ it << i }}
+    ruleSetFiles = files(conf)
     ignoreFailures = true
     ruleSets = [ "java-basic", "java-strings", "java-braces" ]
 
