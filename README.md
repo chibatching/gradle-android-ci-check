@@ -2,7 +2,7 @@
 
 ## How to use
 
-Add below line under your build.gradle.
+Add below line under your module's build.gradle.
 
 ```
 apply from: "https://raw.githubusercontent.com/chibatching/gradle-android-ci-check/master/ci.gradle"
@@ -10,7 +10,7 @@ apply from: "https://raw.githubusercontent.com/chibatching/gradle-android-ci-che
 
 ## Use your own configs
 
-If you want to use your own configs, write local config file path on gradle.properties
+If you want to use your own configs, write local config file path in gradle.properties
 
 ```
 checkStyleConfigFile=../config/quality/checkstyle/checkstyle.xml
